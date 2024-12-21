@@ -1,0 +1,455 @@
+[33mcommit 1f5e2287504cbebaedc2aa661e8f62269770ad87[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: kirtanmakwana <kirtanmakwana789@gmail.com>
+Date:   Sat Dec 21 21:34:30 2024 +0530
+
+    Initial commit
+
+[1mdiff --git a/CSGO Prediction.ipynb b/CSGO Prediction.ipynb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d5c1845[m
+[1m--- /dev/null[m
+[1m+++ b/CSGO Prediction.ipynb[m	
+[36m@@ -0,0 +1,1629 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m "cells": [[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 1,[m
+[32m+[m[32m   "id": "b084099a-5642-4596-80cb-fbfc45e3e373",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "import requests\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "url = \"https://www.openml.org/data/download/22102255/dataset\"\n",[m
+[32m+[m[32m    "r = requests.get(url, allow_redirects=True)"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 2,[m
+[32m+[m[32m   "id": "dc7fdcba-229c-44d1-9d32-a6805f33c0b5",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "with open(\"dataset.txt\", \"wb\") as f:\n",[m
+[32m+[m[32m    "    f.write(r.content)"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 3,[m
+[32m+[m[32m   "id": "28930362-a44e-42e9-9093-7e723777456a",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "import pandas as pd"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 4,[m
+[32m+[m[32m   "id": "258fc925-e7d2-4652-9c34-388a36dafd5b",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "data = []\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "with open(\"dataset.txt\", \"r\") as f:\n",[m
+[32m+[m[32m    "    for line in f.read().split(\"\\n\"):\n",[m
+[32m+[m[32m    "        if line.startswith(\"@\") or line.startswith(\"%\") or line == \"\":\n",[m
+[32m+[m[32m    "            continue\n",[m
+[32m+[m[32m    "        data.append(line)"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 5,[m
+[32m+[m[32m   "id": "406b3b8c-fdfa-46bc-9594-dbde054869a4",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "columns = []\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "with open(\"dataset.txt\", \"r\") as f:\n",[m
+[32m+[m[32m    "    for line in f.read().split(\"\\n\"):\n",[m
+[32m+[m[32m    "        if line.startswith(\"@ATTRIBUTE\"):\n",[m
+[32m+[m[32m    "            columns.append(line.split(\" \")[1])"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 6,[m
+[32m+[m[32m   "id": "534bb075-2fdf-41c2-aaa6-eff6b5bf09c1",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "with open(\"df.csv\", \"w\") as f:\n",[m
+[32m+[m[32m    "    f.write(\",\".join(columns))\n",[m
+[32m+[m[32m    "    f.write(\"\\n\")\n",[m
+[32m+[m[32m    "    f.write(\"\\n\".join(data))"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 7,[m
+[32m+[m[32m   "id": "931372d4-ae01-4601-ba7b-88d3919291a8",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "df = pd.read_csv(\"df.csv\")\n",[m
+[32m+[m[32m    "df.columns = columns"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 8,[m
+[32m+[m[32m   "id": "a0b1c74a-f839-4127-8a70-f943490ee6a3",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "df[\"t_win\"] = df.round_winner.astype(\"category\").cat.codes"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 9,[m
+[32m+[m[32m   "id": "c4c213c4-b367-484e-9f22-e68460a58133",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [[m
+[32m+[m[32m    {[m
+[32m+[m[32m     "name": "stdout",[m
+[32m+[m[32m     "output_type": "stream",[m
+[32m+[m[32m     "text": [[m
+[32m+[m[32m      "t_win                           1.000000\n",[m
+[32m+[m[32m      "ct_armor                        0.336382\n",[m
+[32m+[m[32m      "ct_helmets                      0.308255\n",[m
+[32m+[m[32m      "t_helmets                       0.297458\n",[m
+[32m+[m[32m      "ct_defuse_kits                  0.291557\n",[m
+[32m+[m[32m      "t_armor                         0.290753\n",[m
+[32m+[m[32m      "ct_grenade_flashbang            0.253868\n",[m
+[32m+[m[32m      "ct_players_alive                0.216798\n",[m
+[32m+[m[32m      "ct_grenade_smokegrenade         0.209975\n",[m
+[32m+[m[32m      "ct_weapon_awp                   0.198626\n",[m
+[32m+[m[32m      "t_weapon_ak47                   0.194147\n",[m
+[32m+[m[32m      "ct_health                       0.190662\n",[m
+[32m+[m[32m      "bomb_planted                    0.187101\n",[m
+[32m+[m[32m      "ct_weapon_m4a4                  0.178008\n",[m
+[32m+[m[32m      "ct_grenade_hegrenade            0.168781\n",[m
+[32m+[m[32m      "ct_grenade_incendiarygrenade    0.168517\n",[m
+[32m+[m[32m      "ct_weapon_ak47                  0.166855\n",[m
+[32m+[m[32m      "t_grenade_flashbang             0.166839\n",[m
+[32m+[m[32m      "ct_weapon_sg553                 0.163963\n",[m
+[32m+[m[32m      "t_weapon_sg553                  0.163709\n",[m
+[32m+[m[32m      "ct_weapon_usps                  0.152893\n",[m
+[32m+[m[32m      "t_weapon_awp                    0.149878\n",[m
+[32m+[m[32m      "t_players_alive                 0.142518\n",[m
+[32m+[m[32m      "t_grenade_smokegrenade          0.140348\n",[m
+[32m+[m[32m      "t_weapon_usps                   0.136694\n",[m
+[32m+[m[32m      "Name: t_win, dtype: float64\n"[m
+[32m+[m[32m     ][m
+[32m+[m[32m    }[m
+[32m+[m[32m   ],[m
+[32m+[m[32m   "source": [[m
+[32m+[m[32m    "import matplotlib.pyplot as plt\n",[m
+[32m+[m[32m    "import seaborn as sns\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "correlations = df[columns+[\"t_win\"]].corr()\n",[m
+[32m+[m[32m    "print(correlations['t_win'].apply(abs).sort_values(ascending=False).iloc[:25])\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "selected_columns = []\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "for col in columns+['t_win']:\n",[m
+[32m+[m[32m    "    try:\n",[m
+[32m+[m[32m    "        if abs(correlations[col]['t_win']) > 0.15:\n",[m
+[32m+[m[32m    "            selected_columns.append(col)\n",[m
+[32m+[m[32m    "    except KeyError:\n",[m
+[32m+[m[32m    "        pass\n",[m
+[32m+[m[32m    "\n",[m
+[32m+[m[32m    "df_selected = df[selected_columns]"[m
+[32m+[m[32m   ][m
+[32m+[m[32m  },[m
+[32m+[m[32m  {[m
+[32m+[m[32m   "cell_type": "code",[m
+[32m+[m[32m   "execution_count": 10,[m
+[32m+[m[32m   "id": "2825c886-b923-4539-8650-7fc3e2009eac",[m
+[32m+[m[32m   "metadata": {[m
+[32m+[m[32m    "pycharm": {[m
+[32m+[m[32m     "name": "#%%\n"[m
+[32m+[m[32m    }[m
+[32m+[m[32m   },[m
+[32m+[m[32m   "outputs": [[m
+[32m+[m[32m    {[m
+[32m+[m[32m     "data": {[m
+[32m+[m[32m      "text/html": [[m
+[32m+[m[32m       "<div>\n",[m
+[32m+[m[32m       "<style scoped>\n",[m
+[32m+[m[32m       "    .dataframe tbody tr th:only-of-type {\n",[m
+[32m+[m[32m       "        vertical-align: middle;\n",[m
+[32m+[m[32m       "    }\n",[m
+[32m+[m[32m       "\n",[m
+[32m+[m[32m       "    .dataframe tbody tr th {\n",[m
+[32m+[m[32m       "        vertical-align: top;\n",[m
+[32m+[m[32m       "    }\n",[m
+[32m+[m[32m       "\n",[m
+[32m+[m[32m       "    .dataframe thead th {\n",[m
+[32m+[m[32m       "        text-align: right;\n",[m
+[32m+[m[32m       "    }\n",[m
+[32m+[m[32m       "</style>\n",[m
+[32m+[m[32m       "<table border=\"1\" class=\"dataframe\">\n",[m
+[32m+[m[32m       "  <thead>\n",[m
+[32m+[m[32m       "    <tr style=\"text-align: right;\">\n",[m
+[32m+[m[32m       "      <th></th>\n",[m
+[32m+[m[32m       "      <th>bomb_planted</th>\n",[m
+[32m+[m[32m       "      <th>ct_health</th>\n",[m
+[32m+[m[32m       "      <th>ct_armor</th>\n",[m
+[32m+[m[32m       "      <th>t_armor</th>\n",[m
+[32m+[m[32m       "      <th>ct_helmets</th>\n",[m
+[32m+[m[32m       "      <th>t_helmets</th>\n",[m
+[32m+[m[32m       "      <th>ct_defuse_kits</th>\n",[m
+[32m+[m[32m       "      <th>ct_players_alive</th>\n",[m
+[32m+[m[32m       "      <th>ct_weapon_ak47</th>\n",[m
+[32m+[m[32m       "      <th>t_weapon_ak47</th>\n",[m
+[32m+[m[32m       "      <th>...</th>\n",[m
+[32m+[m[32m       "      <th>ct_weapon_m4a4</th>\n",[m
+[32m+[m[32m       "      <th>ct_weapon_sg553</th>\n",[m
+[32m+[m[32m       "      <th>t_weapon_sg553</th>\n",[m
+[32m+[m[32m       "      <th>ct_weapon_usps</th>\n",[m
+[32m+[m[32m       "      <th>ct_grenade_hegrenade</th>\n",[m
+[32m+[m[32m       "      <th>ct_grenade_flashbang</th>\n",[m
+[32m+[m[32m       "      <th>t_grenade_flashbang</th>\n",[m
+[32m+[m[32m       "      <th>ct_grenade_smokegrenade</th>\n",[m
+[32m+[m[32m       "      <th>ct_grenade_incendiarygrenade</th>\n",[m
+[32m+[m[32m       "      <th>t_win</th>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "  </thead>\n",[m
+[32m+[m[32m       "  <tbody>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>0</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>500.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>5.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>1</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>500.0</td>\n",[m
+[32m+[m[32m       "      <td>400.0</td>\n",[m
+[32m+[m[32m       "      <td>300.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>5.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>2</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>391.0</td>\n",[m
+[32m+[m[32m       "      <td>294.0</td>\n",[m
+[32m+[m[32m       "      <td>200.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>3</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>391.0</td>\n",[m
+[32m+[m[32m       "      <td>294.0</td>\n",[m
+[32m+[m[32m       "      <td>200.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>4</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>500.0</td>\n",[m
+[32m+[m[32m       "      <td>192.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>5.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>...</th>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>122405</th>\n",[m
+[32m+[m[32m       "      <td>True</td>\n",[m
+[32m+[m[32m       "      <td>200.0</td>\n",[m
+[32m+[m[32m       "      <td>195.0</td>\n",[m
+[32m+[m[32m       "      <td>359.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>4.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[32m       "    <tr>\n",[m
+[32m+[m[32m       "      <th>122406</th>\n",[m
+[32m+[m[32m       "      <td>False</td>\n",[m
+[32m+[m[32m       "      <td>500.0</td>\n",[m
+[32m+[m[32m       "      <td>95.0</td>\n",[m
+[32m+[m[32m       "      <td>175.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>5.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>...</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>5.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>2.0</td>\n",[m
+[32m+[m[32m       "      <td>1.0</td>\n",[m
+[32m+[m[32m       "      <td>0.0</td>\n",[m
+[32m+[m[32m       "      <td>1</td>\n",[m
+[32m+[m[32m       "    </tr>\n",[m
+[32m+[m[
